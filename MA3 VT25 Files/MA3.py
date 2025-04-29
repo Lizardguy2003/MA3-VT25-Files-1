@@ -51,7 +51,7 @@ def sphere_volume(n, d): #Ex2, approximation
 
     #1. list comprehension; finding random coordinates
     coord = [[random.uniform(-1, 1) for _ in range(d)] for _ in range(n)]
-
+    
     #2. functools.reduce 3. map 4. lambda; increasing the number of points are inside the sphere by 1 everytime the check passes
     for i in range(n):
         k = functools.reduce(lambda x,y: x+y , map(lambda p: p**2, coord[i]))
@@ -70,32 +70,46 @@ def sphere_volume_parallel1(n,d,np=10):
     #n is the number of points
     # d is the number of dimensions of the sphere
     #np is the number of processes
-  
-
     with future.ProcessPoolExecutor() as ex:
-        result = list(ex.map(sphere_volume, [n]*np, [d]*np))
-        
+        list = []
         for _ in range(np):
-            p = ex.submit
-    
-    return mean(result)
+            p = ex.submit(sphere_volume, n, d)
+            r = p.result()
+            list.append(r)
+    return mean(list)
 
 #Ex4: parallel code - parallelize actual computations by splitting data
 def sphere_volume_parallel2(n,d,np=10):
     #n is the number of points
-    # d is the number of dimensions of the sphere
+    #d is the number of dimensions of the sphere
     #np is the number of processes
-
-    with future.ProcessPoolExecutor() as ex:
-        result = list(ex.map(sphere_volume, [n]*np, [d]*np))
     
-    return mean(result)
+    with future.ProcessPoolExecutor() as ex:
+        result = list(ex.map(helper, [int(n/np)]*np, [d]*np))
+        
+    res = sum(result)
+        
+    vol = (2**d)*res/n
+    
+    return vol
+    
+def helper(n, d):
+    var = 0
+    coord = [[random.uniform(-1, 1) for _ in range(d)] for _ in range(n)]
+    for i in coord:
+        k = functools.reduce(lambda x,y: x+y , map(lambda p: p**2, i))
+        if k <= 1:
+            var += 1
+    return var
+    
+    #    result = list(ex.map(sphere_volume, [n]*np, [d]*np))
+    
+    #return mean(result)
     
 def main():
     #Ex1
     dots = [1000, 10000, 100000]
     for n in dots:
-        1
         approximate_pi(n)
     #Ex2
     n = 100000
@@ -111,14 +125,18 @@ def main():
     #Ex3
     n = 100000
     d = 11
-    #start = pc()
-    #for y in range (10):
-        #sphere_volume(n,d)
-    #stop = pc()
-    print(sphere_volume_parallel1(n,d,np=10))
+    start = pc()
+    for y in range (10):
+        sphere_volume(n,d)
+    stop = pc()
+    
     print(f"Ex3: Sequential time of {d} and {n}: {(stop-start)}") #it took 7.9 seconds, average 0.79 seonds
-    print("What is parallel time?") #it took about 6 seconds, averaging about 0.6 seconds per run
-
+    print("What is parallel time?") 
+    start2 = pc()
+    sphere_volume_parallel1(n, d, 10)
+    end2 = pc()
+    print(end2-start2)
+    
     #Ex4
     n = 1000000
     d = 11
@@ -131,7 +149,7 @@ def main():
     start1 = pc()
     sphere_volume_parallel2(n,d,np=10)
     stop1 = pc()
-    print({stop1-start1})
+    print(stop1-start1)
     
     
     
