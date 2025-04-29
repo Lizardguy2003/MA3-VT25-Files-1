@@ -102,10 +102,6 @@ def helper(n, d):
             var += 1
     return var
     
-    #    result = list(ex.map(sphere_volume, [n]*np, [d]*np))
-    
-    #return mean(result)
-    
 def main():
     #Ex1
     dots = [1000, 10000, 100000]
