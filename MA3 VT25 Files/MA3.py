@@ -96,25 +96,25 @@ def main():
     dots = [1000, 10000, 100000]
     for n in dots:
         1
-        #approximate_pi(n)
+        approximate_pi(n)
     #Ex2
     n = 100000
     d = 2
-    #sphere_volume(n,d)
-    #print(f"Actual volume of {d} dimentional sphere = {hypersphere_exact(d)}")
+    sphere_volume(n,d)
+    print(f"Actual volume of {d} dimentional sphere = {hypersphere_exact(d)}")
 
     n = 100000
     d = 11
-    #sphere_volume(n,d)
-    #print(f"Actual volume of {d} dimentional sphere = {hypersphere_exact(d)}")
+    sphere_volume(n,d)
+    print(f"Actual volume of {d} dimentional sphere = {hypersphere_exact(d)}")
 
     #Ex3
     n = 100000
     d = 11
-    start = pc()
-    for y in range (10):
-        sphere_volume(n,d)
-    stop = pc()
+    #start = pc()
+    #for y in range (10):
+        #sphere_volume(n,d)
+    #stop = pc()
     print(sphere_volume_parallel1(n,d,np=10))
     print(f"Ex3: Sequential time of {d} and {n}: {(stop-start)}") #it took 7.9 seconds, average 0.79 seonds
     print("What is parallel time?") #it took about 6 seconds, averaging about 0.6 seconds per run
@@ -127,7 +127,11 @@ def main():
     stop = pc()
     print(f"Ex4: Sequential time of {d} and {n}: {stop-start}")
     print("What is parallel time?")
+    start1 = pc()
     sphere_volume_parallel2(n,d,np=10)
+    stop1 = pc()
+    print({stop1-start1})
+    
     
     
 
