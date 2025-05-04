@@ -57,9 +57,8 @@ def sphere_volume(n, d): #Ex2, approximation
         k = functools.reduce(lambda x,y: x+y , map(lambda p: p**2, coord[i]))
         if k <= 1:
              var += 1
-    vol = (2**d)*var/n
-    
-    return vol
+
+    return (2**d)*var/n
 
 def hypersphere_exact(d): #Ex2, real value
     # d is the number of dimensions of the sphere 
@@ -70,13 +69,11 @@ def sphere_volume_parallel1(n,d,np=10):
     #n is the number of points
     # d is the number of dimensions of the sphere
     #np is the number of processes
+    
     with future.ProcessPoolExecutor() as ex:
-        list = []
-        for _ in range(np):
-            p = ex.submit(sphere_volume, n, d)
-            r = p.result()
-            list.append(r)
-    return mean(list)
+        p = [ex.submit(sphere_volume, int(n/np), d) for _ in range(np)] #n/np to only have total n iterations
+        r = [f.result() for f in p]
+    return mean(r)
 
 #Ex4: parallel code - parallelize actual computations by splitting data
 def sphere_volume_parallel2(n,d,np=10):
