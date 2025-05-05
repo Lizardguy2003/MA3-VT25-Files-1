@@ -24,11 +24,11 @@ def approximate_pi(n): # Ex1
 
     #inside the circle
     pair = list(zip(x, y))
-    coordred = [p for p in pair if p[0]**2 + p[1]**2 <= 1]
+    coordred = [p for p in pair if (p[0]**2 + p[1]**2) < 1]
     xplotred, yplotred = zip(*coordred)
 
     #Outside the circle
-    coordblue= [p for p in pair if p[0]**2 + p[1]**2 > 1]
+    coordblue= [p for p in pair if (p[0]**2 + p[1]**2) > 1]
     xplotblue, yplotblue = zip(*coordblue)
 
     #Calculating pi
