@@ -17,24 +17,25 @@ import functools
 def approximate_pi(n): # Ex1
     #n is the number of points
     # Write your code here
+    #create coordinates for x and y
     print(f'The Number of points: {n}')
     x = [random.uniform(-1, 1) for _ in range(n)]
     y = [random.uniform(-1, 1) for _ in range(n)]
 
 
-    #inside the circle
+    #inside the circle, if the sum of the pairs squared is smaller than 1 it is sorted into RED
     pair = list(zip(x, y))
     coordred = [p for p in pair if (p[0]**2 + p[1]**2) < 1]
     xplotred, yplotred = zip(*coordred)
 
-    #Outside the circle
+    #Outside the circle, if the sum of the pairs squared is larger than 1 it is sorted into BLUE
     coordblue= [p for p in pair if (p[0]**2 + p[1]**2) > 1]
     xplotblue, yplotblue = zip(*coordblue)
 
     #Calculating pi
     pi = 4*len(coordred)/n
     
-    #Making the plot
+    #Making the plot, and making it square
     fig, ax = plt.subplots()
     ax.plot(xplotred, yplotred, 'ro', xplotblue, yplotblue, 'bo')
     x0, x1 = ax.get_xlim()
@@ -53,7 +54,7 @@ def sphere_volume(n, d): #Ex2, approximation
     coord = [[random.uniform(-1, 1) for _ in range(d)] for _ in range(n)]
     
     #2. functools.reduce 3. map 4. lambda; increasing the number of points are inside the sphere by 1 everytime the check passes
-    for i in range(n):
+    for i in range(n): #squaring all elements in the smaller lists and adding them together
         k = functools.reduce(lambda x,y: x+y , map(lambda p: p**2, coord[i]))
         if k <= 1:
              var += 1
@@ -81,6 +82,8 @@ def sphere_volume_parallel2(n,d,np=10):
     #d is the number of dimensions of the sphere
     #np is the number of processes
     
+
+    #using a helper function to use ex.map
     with future.ProcessPoolExecutor() as ex:
         result = list(ex.map(helper, [int(n/np)]*np, [d]*np))
         
@@ -91,6 +94,7 @@ def sphere_volume_parallel2(n,d,np=10):
     return vol
     
 def helper(n, d):
+    #same code as above in Ex2
     var = 0
     coord = [[random.uniform(-1, 1) for _ in range(d)] for _ in range(n)]
     for i in coord:
